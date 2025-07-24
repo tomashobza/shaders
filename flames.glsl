@@ -50,7 +50,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     
     // Threshold the noise to create flame shape
     float flame = step(noise, threshold);
-    
+
     // Create flame colors based on height
     vec3 color = vec3(0.0);
     if (flame > 0.0) {
