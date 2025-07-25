@@ -37,24 +37,23 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     
     // Add twirling distortion that increases with height
     float twirl = sin(uv.x * 8.0 + iTime * 4.0) * uv.y * uv.y;
-    // uv.x += twirl;
+    uv.x += twirl;
     
     // Scale and animate the noise
     vec2 noisePos = vec2(uv.x * 15.0, uv.y * 8.0 - iTime * 2.0);
     
     // Generate Perlin noise
     float noise = perlin(noisePos,  uv.y * 5.0 + 0.5 );
+
     
     // Create threshold that decreases with height
-    float threshold = 1.0 - uv.y * 1.8;
-    float threshold2 = 0.5 - uv.y * 2.0;
-    float threshold3 = 0.4 - uv.y * 1.5;
+    float threshold = 0.8 - uv.y * 1.8;
+
     // float threshold = 0.5; 
     
     // Threshold the noise to create flame shape
     float flame = step(noise, threshold);
-    float flame2 = step(noise, threshold2);
-    float flame3 = step(noise, threshold3);
+
 
     // Create flame colors based on height
     vec3 color = vec3(0.0);
@@ -65,20 +64,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
         
         // color = mix(blueColor, orangeColor, uv.y / 0.2);
     }
-    if (flame2 > 0.0) {
-        vec3 blueColor = vec3(0.0, 0.0, 1.0);
-        color = blueColor;
-        // vec3 blueColor = vec3(0.0, 0.2, 1.0);
-        
-        // color = mix(orangeColor, blueColor, uv.y / 0.2);
-    }
-    if (flame3 > 0.0) {
-        vec3 purpleColor = vec3(0.6, 0.0, 0.7);
-        color = purpleColor;
-        // vec3 yellowColor = vec3(1.0, 1.0, 0.2);
-        
-        // color = mix(blueColor, yellowColor, uv.y / 0.2);
-    }
+
     
     fragColor = vec4(color * flame, 1.0);
 }
