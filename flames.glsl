@@ -69,18 +69,23 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     // Threshold the noise to create flame shape
     float flame = step(combinedNoise, threshold);
     
-    // Create flame colors based on height with more variation
+    // Create flame colors based on noise values
     vec3 color = vec3(0.0);
     if (flame > 0.0) {
-        vec3 purpleColor = vec3(0.6, 0.0, 0.7);
-        vec3 brightPurple = vec3(0.8, 0.2, 0.9);
+        // Convert hex colors to RGB
+        vec3 lowNoiseColor = vec3(255.0/255.0, 255.0/255.0, 212.0/255.0); // #A280D4
+        // rgb(183, 0, 255)
+        vec3 highNoiseColor = vec3(183.0/255.0, 0.0/255.0, 255.0/255.0);
+
+        // Normalize noise value to 0-1 range for color mixing
+        float normalizedNoise = (combinedNoise + 1.0) * 0.5;
+        normalizedNoise = clamp(normalizedNoise, 0.0, 1.0);
         
-        // Add some color variation based on noise
-        float colorVariation = (mainNoise + 1.0) * 0.5;
-        color = mix(purpleColor, brightPurple, colorVariation * uv.y);
+        // Mix colors based on noise value
+        color = mix(lowNoiseColor, highNoiseColor, normalizedNoise);
         
-        // Add intensity variation
-        color *= 1.0 + detailNoise * 0.3;
+        // Add slight intensity variation
+        color *= 1.0 + detailNoise * 0.2;
     }
     
     fragColor = vec4(color * flame, 1.0);
